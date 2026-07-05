@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "idea-box-mcp"
+version = "0.1.0"
+description = "Local Markdown knowledge base (idea-box + memo-box) search and add via natural language"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "idea-box-mcp contributors" },
+]
+keywords = ["mcp", "model-context-protocol", "claude", "agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "mcp[cli]>=1.0.0",
+]
+
+[project.scripts]
+"idea-box-mcp" = "idea_box_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/nerin81-netizen/idea-box-mcp"
+Repository = "https://github.com/nerin81-netizen/idea-box-mcp"
+Issues = "https://github.com/nerin81-netizen/idea-box-mcp/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/idea_box_mcp"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/idea_box_mcp",
+    "README.md",
+    "README.ko.md",
+    "README.zh.md",
+    "README.ja.md",
+    "LICENSE",
+]
