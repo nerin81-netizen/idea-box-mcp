@@ -15,14 +15,33 @@
 
 ## ✨ What this is
 
-A Model Context Protocol (MCP) server that turns your local Markdown knowledge bases into LLM-callable tools. Two directories are exposed:
+**You have folders full of Markdown files.** Ideas you've been collecting. Memos, links, references. You know they're there — but finding the right one when you need it? That's the problem.
 
-| Directory | Contents | Purpose |
+`idea-box-mcp` turns your local Markdown folders into **LLM-callable tools**. Instead of:
+
+```bash
+# ❌ Before: Manual searching
+grep -r "AI" ~/ideas-h/
+find ~/memos-h/ -name "*.md" -exec grep -l "arxiv" {} \;
+```
+
+You can now say:
+
+```text
+# ✅ After: Natural language
+"AI 관련 아이디어 찾아줘"
+"arxiv 메모 보여줘"
+"메모해 — 이 링크 나중에 봐야 해"
+```
+
+**Two directories exposed:**
+
+| Directory | What's inside | When you'd use it |
 |---|---|---|
 | `~/ideas-h/` | App ideas with status/grade | "What should I build next?" |
 | `~/memos-h/` | Raw references (8 categories) | "What did I save earlier?" |
 
-> **Take your local Markdown folders and wrap them in MCP — so you can query them with natural language from any MCP client.**
+> **The core idea:** Your local Markdown folders are already a knowledge base. This MCP just makes them *queryable* by LLMs.
 
 ## 🛠 Tools (5)
 
@@ -33,6 +52,70 @@ A Model Context Protocol (MCP) server that turns your local Markdown knowledge b
 | `search_memos` | `keyword`, `category`, `limit` | Search memo-box (8 categories) | "arxiv 메모 찾아줘" |
 | `count_memos` | — | Statistics (total, by category) | "메모박스 통계" |
 | `add_memo` | `title`, `content`, `category`, `tags` | Add new memo with auto-categorization | "메모해 — ..." |
+
+### Real-world scenarios
+
+**Scenario 1: "What was that idea about health tracking?"**
+
+You remember writing something about a health app 2 weeks ago, but can't find it. Just ask:
+
+```text
+"건강 관련 아이디어 찾아줘"
+
+→ 🔍 '건강' 검색 결과 — 3건 / 전체 145개
+
+  · **건강데이터통합앱** [B]
+    병원/약국/보험 데이터를 한 곳에서...
+    📁 `2026-06-15_건강데이터통합앱.md`
+
+  · **복약알림+상호작용체크**
+    약 먹을 때 부작용 체크하는 앱...
+    📁 `2026-06-20_복약알림.md`
+```
+
+**Scenario 2: "Save this for later"**
+
+You're browsing and find something interesting. Instead of bookmarking (and forgetting), just say:
+
+```text
+"메모해 — vLLM 서빙 튜토리얼: https://vllm.readthedocs.io/en/latest/
+태그: mlops, inference, vllm"
+
+→ ✅ 저장 완료: `links/2026-07-06_vLLM 서빙 튜토리얼.md`
+   카테고리: 🔗 링크
+```
+
+Later, you ask:
+
+```text
+"inference 관련 메모 찾아줘"
+
+→ 🔍 메모박스 검색 — 2건 / 전체 11개
+
+  · 🔗 링크 **vLLM 서빙 튜토리얼**
+    https://vllm.readthedocs.io/en/latest/
+    📁 `links/2026-07-06_vLLM 서빙 튜토리얼.md`
+```
+
+**Scenario 3: "How many ideas do I have?"**
+
+```text
+"내 아이디어 몇 개야?"
+
+→ 📊 아이디어 박스 현황
+
+📁 총 145개
+🥇 S 등급: 0개
+🥈 A 등급: 1개
+🥉 B 등급: 0개
+⚪ C 등급: 0개
+
+**최근 추가 5개:**
+  · 🧠 [최근 추가된 아이디어 제목 1]
+  · 📋 [최근 추가된 아이디어 제목 2]
+  · 📰 [최근 추가된 아이디어 제목 3]
+  · …
+```
 
 ### `search_ideas(keyword, limit=5)`
 
