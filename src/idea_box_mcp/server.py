@@ -11,6 +11,7 @@ Transport: stdio (Anthropic MCP standard)
 """
 from __future__ import annotations
 
+import os
 import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -19,8 +20,8 @@ from mcp.server.fastmcp import FastMCP
 
 # ── 상수 ──────────────────────────────────────────────
 KST = timezone(timedelta(hours=9))
-IDEA_DIR = Path("/opt/data/ideas-h")
-MEMO_DIR = Path("/opt/data/memos-h")
+IDEA_DIR = Path(os.getenv("IDEA_BOX_DIR", Path.home() / "ideas-h"))
+MEMO_DIR = Path(os.getenv("MEMO_BOX_DIR", Path.home() / "memos-h"))
 
 # 메모박스 8개 카테고리
 MEMO_CATEGORIES = {
@@ -52,12 +53,13 @@ mcp = FastMCP(
 
 # ── 아이디어 박스 헬퍼 ────────────────────────────────
 def _list_idea_files() -> list[Path]:
-    """INDEX.md / dashboard 제외한 모든 아이디어 파일."""
+    """index.md / dashboard 제외한 모든 아이디어 파일."""
     if not IDEA_DIR.exists():
         return []
+    ignore_names = {"index.md", "대시보드.md", "앱인토스_적합성검토.md"}
     return [
         f for f in IDEA_DIR.glob("*.md")
-        if f.name not in ("INDEX.md", "대시보드.md", "앱인토스_적합성검토.md")
+        if f.name.lower() not in ignore_names
     ]
 
 
@@ -106,7 +108,7 @@ def _list_memo_files(category: str | None = None) -> list[Path]:
     pattern = f"{category}/*.md" if category else "**/*.md"
     return [
         f for f in MEMO_DIR.glob(pattern)
-        if f.name != "INDEX.md"
+        if f.name.lower() != "index.md"
     ]
 
 
