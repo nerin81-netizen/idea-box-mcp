@@ -141,9 +141,17 @@ def _detect_memo_category(title: str, content: str) -> str:
 
 
 # ── MCP Tools ─────────────────────────────────────────
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Search App Ideas",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    }
+)
 async def search_ideas(keyword: str, limit: int = 5) -> str:
-    """아이디어 박스에서 키워드로 검색합니다.
+    """Search the idea-box by keyword from idea-box(아이디어박스).
 
     Args:
         keyword: 검색 키워드 (예: 'AI', '환불', '카페', 'MVP')
@@ -177,9 +185,17 @@ async def search_ideas(keyword: str, limit: int = 5) -> str:
     return f"{header}\n\n" + "\n\n".join(matches[:limit])
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Get App Ideas Statistics",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    }
+)
 async def count_ideas() -> str:
-    """아이디어 박스 통계를 보여줍니다 (총 개수, 등급별, 최근 추가)."""
+    """Get app ideas statistics (total count, by grade, recent additions) from idea-box(아이디어박스)."""
     files = _list_idea_files()
     if not files:
         return "📭 아이디어 박스가 비어있어요."
@@ -220,9 +236,17 @@ async def count_ideas() -> str:
 """
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Search Memos and References",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    }
+)
 async def search_memos(keyword: str = "", category: str = "", limit: int = 10) -> str:
-    """메모박스에서 키워드/카테고리로 검색합니다.
+    """Search the memo-box by keyword or category from idea-box(아이디어박스).
 
     Args:
         keyword: 검색 키워드 (선택, 제목+내용 매칭)
@@ -262,9 +286,17 @@ async def search_memos(keyword: str = "", category: str = "", limit: int = 10) -
     return f"{header}\n\n" + "\n\n".join(matches[:limit])
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Get Memos Statistics",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": True,
+    }
+)
 async def count_memos() -> str:
-    """메모박스 통계를 보여줍니다 (총 개수, 카테고리별)."""
+    """Get memo-box statistics (total count, by category) from idea-box(아이디어박스)."""
     if not MEMO_DIR.exists():
         return "📭 메모박스 디렉토리 없음"
 
@@ -297,9 +329,17 @@ async def count_memos() -> str:
     return "\n".join(lines)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={
+        "title": "Add New Memo to Repository",
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "openWorldHint": False,
+        "idempotentHint": False,
+    }
+)
 async def add_memo(title: str, content: str, category: str = "", tags: str = "") -> str:
-    """새 메모를 메모박스에 추가합니다.
+    """Add a new memo to the local memo-box repository from idea-box(아이디어박스).
 
     Args:
         title: 메모 제목
@@ -355,7 +395,18 @@ _(작성 예정)_
 
 # ── 진입점 ───────────────────────────────────────────
 def main() -> None:
-    mcp.run(transport="stdio")
+    import sys
+    import os
+    if len(sys.argv) > 1 and sys.argv[1] == "sse":
+        import uvicorn
+        from starlette.applications import Starlette
+        from starlette.routing import Mount
+        port = int(os.getenv("PORT", 8000))
+        app = Starlette(routes=[Mount("/", app=mcp.sse_app())])
+        print(f"Starting idea-box SSE Server on port {port}")
+        uvicorn.run(app, host="0.0.0.0", port=port)
+    else:
+        mcp.run(transport="stdio")
 
 
 if __name__ == "__main__":
