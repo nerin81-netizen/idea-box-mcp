@@ -7,7 +7,7 @@
 [![MCP](https://img.shields.io/badge/MCP-1.0+-green.svg)](https://modelcontextprotocol.io)
 [![GitHub stars](https://img.shields.io/github/stars/nerin81-netizen/idea-box-mcp)](https://github.com/nerin81-netizen/idea-box-mcp/stargazers)
 
-**🌍 Read in your language:** [English](README.md) · [한국어](README.ko.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+**🌍 Read in your language:** [English](README.md) · [한국어](README.ko.md) · [中文](README.zh.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md) · [हिन्दी](README.hi.md) · [العربية](README.ar.md)
 
 [🚀 Quickstart](#-quickstart) · [🛠 Tools](#-tools-5) · [🎬 Demo](#-demo) · [🏗 Architecture](#-architecture) · [🧪 Development](#-development)
 
